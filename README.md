@@ -1,6 +1,14 @@
 # 🧩 Multi-Service Docker Application
 
-This is a full-stack multi-service application using **React**, **Express**, **MongoDB**, **Redis**, and **Nginx**, all containerized using **Docker Compose**.
+A full-stack, Dockerized application using:
+
+- ⚛️ React (Frontend)
+- 🚀 Express.js (Backend API)
+- 🍃 MongoDB (Database)
+- 🔁 Redis (Caching)
+- 🌐 Nginx (Reverse Proxy)
+
+All services are orchestrated using **Docker Compose** for easy deployment and scalability.
 
 ---
 
@@ -8,11 +16,12 @@ This is a full-stack multi-service application using **React**, **Express**, **M
 
 multi-service-app/
 ├── web/ # React frontend
-├── api/ # Express backend API
-├── nginx/ # Reverse proxy configuration
+├── api/ # Express backend
+├── nginx/ # Nginx reverse proxy
 ├── secrets/ # MongoDB root password secret
 ├── docker-compose.yml
-└── .env
+├── .env
+└── README.md
 
 yaml
 Copy
@@ -20,68 +29,78 @@ Edit
 
 ---
 
-## 🚀 Services Overview
-
-| Service   | Description                | Port       |
-|-----------|----------------------------|------------|
-| `web`     | React frontend             | 3000 → 80  |
-| `api`     | Express.js API backend     | 5000       |
-| `mongo`   | MongoDB database           | internal   |
-| `redis`   | Redis cache                | internal   |
-| `nginx`   | Reverse proxy              | 80         |
-
----
-
 ## ⚙️ Setup & Run
 
-### 1. Clone or Download
+### 🔧 Prerequisites
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+
+### 🚀 Start the App
 
 ```bash
-git clone <repo-url>
-cd multi-service-app
-2. Build and Run
-bash
-Copy
-Edit
 docker-compose up --build
-This command will:
+This will:
 
-Build React frontend and serve it via Nginx
+Build the frontend and backend
 
-Build and start API, MongoDB, and Redis services
+Start MongoDB and Redis containers
 
-Set up reverse proxy with Nginx
+Launch Nginx as a reverse proxy
 
-🌐 Access the App
-Frontend (via Nginx): http://localhost or http://<EC2-IP>
+🌐 Access the Application
+Component	URL
+Frontend	http://localhost:3000
+API (direct)	http://localhost:5000
+API (via Nginx)	http://localhost/api
 
-API (via Nginx proxy): http://localhost/api
+If deployed on AWS EC2, replace localhost with your instance's public IP.
 
-📦 Environment Variables
+🔀 Services Overview
+Service	Role	Exposed Port	Internal Port
+web	React frontend	3000	80
+api	Express API	-	5000
+mongo	MongoDB database	-	27017
+redis	Redis cache	-	6379
+nginx	Reverse proxy	80	80
+
+🔒 Environment & Secrets
 .env
-
 env
 Copy
 Edit
 NODE_ENV=production
-🔐 MongoDB Secret
-Stored in: secrets/mongo_root_password.txt
+MongoDB Root Password
+Stored as a Docker secret:
 
-txt
+secrets/mongo_root_password.txt
+
+nginx
 Copy
 Edit
 yoursecurepassword
-Docker Compose loads this as a secret for the MongoDB container.
+Used in docker-compose.yml:
 
-🧪 Healthcheck
-The API service includes a healthcheck:
+yaml
+Copy
+Edit
+secrets:
+  mongo_root_password:
+    file: ./secrets/mongo_root_password.txt
+❤️ Healthcheck (API)
+API includes a health check route:
 
-js
+http
 Copy
 Edit
 GET /health => "OK"
-🧹 Stop and Clean Up
+Configured in docker-compose.yml to ensure container readiness.
+
+📦 Useful Commands
+🛑 Stop Services
 bash
 Copy
 Edit
 docker-compose down
+
+This is the project link: https://roadmap.sh/projects/multiservice-docker
